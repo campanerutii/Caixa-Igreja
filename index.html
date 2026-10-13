@@ -103,6 +103,27 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
 .method:not(:disabled):hover{background:#f0f6ff;border-color:#8cbafa}
 .method.active{background:linear-gradient(135deg,#ecf6ff,#dcecff);border:2px solid #0868ee;color:#0056d2}
 .method.active .icon{color:#0763e5}.method.active .pix-icon{color:#009d96}.method.active .money-icon{color:#108b2e}
+/* Pagamento dividido: campos compactos para trabalhar durante a festa. */
+.split-toggle{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:10px;padding:11px 12px;border:1px dashed #8db7eb;border-radius:11px;background:#f4f9ff;color:#1c5795;font-weight:700;font-size:14px}
+.split-toggle:hover,.split-toggle.active{background:#e6f2ff;border-color:#3986e5}
+.split-toggle .icon{width:18px;height:18px}
+.split-section{margin-top:10px;padding:14px;border:1px solid #cbdff7;border-radius:13px;background:#f6faff}
+.split-intro{font-size:13px;color:#4d6385;margin:0 0 11px}
+.split-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.split-grid label,.split-cash label{display:block;font-size:13px;font-weight:700;color:#34567e}
+.split-entry{display:flex;gap:7px;align-items:center;margin-top:5px;padding:0 10px;min-height:41px;border:1px solid #c9d8ec;background:white;border-radius:9px;color:#6d83a3}
+.split-entry:focus-within{border-color:#2672e6;box-shadow:0 0 0 2px #bbd8ff}
+.split-entry input{width:100%;min-width:0;font-weight:700;border:0;outline:0;color:#112c58;background:transparent;font-size:16px}
+.split-entry span{font-size:13px;font-weight:700}
+.split-cash{margin-top:11px;padding:10px;border:1px solid #d8e5f4;border-radius:9px;background:#fff}
+.split-received{max-width:260px}
+.split-feedback{margin-top:8px;font-size:13px;color:#376393}
+.split-feedback strong{color:#167547}
+.split-feedback.insufficient strong{color:#c55027}
+.split-progress{margin-top:11px;padding:10px 12px;background:#e4f0ff;color:#1259a3;border-radius:9px;font-size:14px;font-weight:700}
+.split-progress.complete{background:#dff7eb;color:#087547}
+.split-progress.over{background:#fff0ef;color:#b53d37}
+@media(max-width:390px){.split-grid{grid-template-columns:1fr}}
 .cash-section{margin-top:11px;border:1px solid #cfe5ff;background:#f6fbff;border-radius:12px;padding:12px 15px}
 .cash-section>label{display:block;font-size:13px;font-weight:700;margin-bottom:8px;color:#3e5480}
 .cash-entry{display:flex;gap:8px;align-items:center;border:1px solid #c8d9ee;border-radius:8px;background:white;padding:0 12px;max-width:270px;height:42px;color:#536b93;font-weight:700}
@@ -426,6 +447,22 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
           <button class="method" type="button" data-method="Pix"><svg class="icon pix-icon"><use href="#ico-pix"/></svg><span>Pix</span></button>
           <button class="method" type="button" data-method="Dinheiro"><svg class="icon money-icon"><use href="#ico-money"/></svg><span>Dinheiro</span></button>
         </div>
+        <button id="splitToggle" type="button" class="split-toggle" aria-pressed="false"><svg class="icon"><use href="#ico-plus"/></svg> Dividir pagamento em duas ou mais formas</button>
+        <div id="splitSection" class="split-section" hidden>
+          <p class="split-intro">Digite o valor pago em cada forma. Use apenas as que precisar.</p>
+          <div class="split-grid">
+            <label>💳 Débito<div class="split-entry"><span>R$</span><input id="splitDebit" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor pago no débito"></div></label>
+            <label>💳 Crédito<div class="split-entry"><span>R$</span><input id="splitCredit" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor pago no crédito"></div></label>
+            <label>◆ Pix<div class="split-entry"><span>R$</span><input id="splitPix" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor pago no Pix"></div></label>
+            <label>💵 Dinheiro<div class="split-entry"><span>R$</span><input id="splitCash" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor pago em dinheiro"></div></label>
+          </div>
+          <div id="splitCashSection" class="split-cash" hidden>
+            <label for="splitReceived">Dinheiro entregue (opcional, para calcular troco)</label>
+            <div class="split-entry split-received"><span>R$</span><input id="splitReceived" type="text" inputmode="decimal" autocomplete="off" placeholder="Valor exato" /></div>
+            <div id="splitChangeRow" class="split-feedback">Troco: <strong id="splitChange">R$ 0,00</strong></div>
+          </div>
+          <div id="splitProgress" class="split-progress" aria-live="polite">Preencha os valores para dividir o pagamento.</div>
+        </div>
         <div id="cashSection" class="cash-section" hidden>
           <label for="cashInput">Valor recebido em dinheiro</label>
           <div class="cash-entry"><span>R$</span><input id="cashInput" type="text" inputmode="decimal" autocomplete="off" placeholder="0,00" aria-label="Valor recebido em dinheiro" /></div>
@@ -436,6 +473,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visi
           <button class="btn btn-print" id="printReceipt" type="button" disabled><svg class="icon"><use href="#ico-printer"/></svg> Imprimir comprovante</button>
           <button class="btn btn-primary btn-finish" id="finishSale" type="button" disabled><svg class="icon"><use href="#ico-check"/></svg> Confirmar pagamento</button>
         </div>
+      </section>
     </div>
   </main>
 
@@ -590,6 +628,7 @@ function loadData(){
 let db=loadData();
 let cart={};
 let chosenMethod=null;
+let splitMode=false;
 let completedSale=null;
 let currentCategory='Todos';
 let productEditingId=null;
@@ -678,47 +717,103 @@ function setMessage(type,title,subtitle){
   $('paymentMessage').className=`payment-message ${type}`;
   $('paymentMessage').innerHTML=`<span class="message-icon"><svg class="icon"><use href="#${icon}"/></svg></span><div><strong>${escapeHTML(title)}</strong><p>${escapeHTML(subtitle)}</p></div>`;
 }
+// Vendas antigas continuam válidas: as novas registram pagamentos individualizados.
+function salePayments(sale){
+  if(Array.isArray(sale.payments)&&sale.payments.length)return sale.payments;
+  return METHODS.includes(sale.method)?[{method:sale.method,amount:sale.total}]:[];
+}
+function salePaymentLabel(sale){
+  return salePayments(sale).map(p=>p.method).join(' + ')||sale.method||'—';
+}
+function salePaymentDetails(sale){
+  return salePayments(sale).map(p=>`${p.method}: ${money(p.amount)}`).join(' + ');
+}
+function paymentDraft(){
+  const total=currentTotal();
+  if(!splitMode){
+    if(!chosenMethod)return {valid:false,reason:'Escolha uma forma de pagamento.'};
+    const received=chosenMethod==='Dinheiro'?parseMoney($('cashInput').value):null;
+    if(chosenMethod==='Dinheiro'&&(received===null||received<total))return {valid:false,reason:'Informe o dinheiro recebido para calcular o troco.'};
+    return {valid:true,payments:[{method:chosenMethod,amount:total}],received,change:received===null?null:received-total};
+  }
+  const fields=[['Débito','splitDebit'],['Crédito','splitCredit'],['Pix','splitPix'],['Dinheiro','splitCash']];
+  let sum=0,hasInvalid=false;
+  const payments=[];
+  for(const [method,id] of fields){
+    const raw=$(id).value.trim();
+    if(!raw)continue;
+    const amount=parseMoney(raw);
+    if(amount===null){hasInvalid=true;continue;}
+    if(amount>0){payments.push({method,amount});sum+=amount;}
+  }
+  const cashAmount=payments.find(p=>p.method==='Dinheiro')?.amount||0;
+  const receivedRaw=$('splitReceived').value.trim();
+  const received=cashAmount?(receivedRaw?parseMoney(receivedRaw):cashAmount):null;
+  const change=cashAmount&&received!==null?received-cashAmount:null;
+  let reason='';
+  if(hasInvalid)reason='Confira os valores informados.';
+  else if(payments.length<2)reason='Preencha pelo menos duas formas de pagamento.';
+  else if(sum!==total)reason=sum<total?`Faltam ${money(total-sum)} para completar o pagamento.`:`Ultrapassou ${money(sum-total)} do total do pedido.`;
+  else if(cashAmount>0&&(received===null||received<cashAmount))reason='O dinheiro entregue não pode ser menor que a parte em dinheiro.';
+  return {valid:!reason,reason,payments,received,change,sum,cashAmount,hasInvalid};
+}
 function updatePayment(){
   const total=currentTotal();
   const done=Boolean(completedSale);
+  const draft=paymentDraft();
   document.querySelectorAll('.method').forEach(button=>{
-    button.classList.toggle('active',button.dataset.method===chosenMethod);
+    const active=!splitMode&&button.dataset.method===chosenMethod;
+    button.classList.toggle('active',active);
     button.disabled=done;
-    button.setAttribute('aria-pressed',String(button.dataset.method===chosenMethod));
+    button.setAttribute('aria-pressed',String(active));
   });
-  const cash=chosenMethod==='Dinheiro'&&!done;
+  $('methods').hidden=splitMode;
+  $('splitToggle').disabled=done;
+  $('splitToggle').classList.toggle('active',splitMode);
+  $('splitToggle').setAttribute('aria-pressed',String(splitMode));
+  $('splitToggle').innerHTML=splitMode?'<svg class="icon"><use href="#ico-close"/></svg> Voltar para pagamento único':'<svg class="icon"><use href="#ico-plus"/></svg> Dividir pagamento em duas ou mais formas';
+  $('splitSection').hidden=!splitMode||done;
+  const cash=chosenMethod==='Dinheiro'&&!splitMode&&!done;
   $('cashSection').hidden=!cash;
-  const received=cash?parseMoney($('cashInput').value):null;
-  const validCash=cash&&received!==null&&received>=total;
   if(cash){
+    const received=parseMoney($('cashInput').value);
     const difference=received===null?null:received-total;
     const row=document.querySelector('.change-row');
     row.classList.toggle('insufficient',difference!==null&&difference<0);
     $('cashBalanceLabel').textContent=difference!==null&&difference<0?'Faltam':'Troco';
     $('changeAmount').textContent=money(Math.abs(difference??0));
   }
+  if(splitMode&&!done){
+    $('splitCashSection').hidden=!(draft.cashAmount>0);
+    const cashDifference=draft.change;
+    $('splitChangeRow').classList.toggle('insufficient',cashDifference!==null&&cashDifference<0);
+    $('splitChangeRow').firstChild.textContent=cashDifference!==null&&cashDifference<0?'Faltam: ':'Troco: ';
+    $('splitChange').textContent=money(Math.abs(cashDifference??0));
+    const indicator=$('splitProgress');
+    indicator.className='split-progress';
+    const sum=draft.sum||0;
+    if(draft.hasInvalid)indicator.textContent='Confira os valores digitados.';
+    else if(sum>total){indicator.classList.add('over');indicator.textContent=`Total informado: ${money(sum)} · Excedeu ${money(sum-total)}`;}
+    else if(sum===total&&total>0){indicator.classList.add('complete');indicator.textContent=`Total preenchido: ${money(sum)} · ${draft.valid?'Tudo certo!':'Confira os campos.'}`;}
+    else indicator.textContent=`Informado: ${money(sum)} de ${money(total)} · Falta ${money(Math.max(0,total-sum))}`;
+  }
   const finish=$('finishSale');
   $('printReceipt').disabled=!done;
+  finish.innerHTML=done?'<svg class="icon"><use href="#ico-check"/></svg> Iniciar nova venda':'<svg class="icon"><use href="#ico-check"/></svg> Confirmar pagamento';
   if(done){
     finish.disabled=false;
-    finish.innerHTML='<svg class="icon"><use href="#ico-check"/></svg> Iniciar nova venda';
     setMessage('success','Pagamento aprovado!','Compra registrada com sucesso no histórico.');
-  } else if(total===0){
+  }else if(total===0){
     finish.disabled=true;
-    finish.innerHTML='<svg class="icon"><use href="#ico-check"/></svg> Confirmar pagamento';
     setMessage('neutral','Pronto para receber!','Adicione produtos e escolha a forma de pagamento.');
-  } else if(!chosenMethod){
+  }else if(!draft.valid){
     finish.disabled=true;
-    finish.innerHTML='<svg class="icon"><use href="#ico-check"/></svg> Confirmar pagamento';
-    setMessage('neutral','Pedido pronto!','Escolha Débito, Crédito, Pix ou Dinheiro.');
-  } else if(cash&&!validCash){
-    finish.disabled=true;
-    finish.innerHTML='<svg class="icon"><use href="#ico-check"/></svg> Confirmar pagamento';
-    setMessage('pending','Aguardando dinheiro','Informe um valor recebido igual ou maior que o total.');
-  } else {
+    const untouched=!splitMode&&!chosenMethod;
+    setMessage(untouched?'neutral':'pending',untouched?'Pedido pronto!':'Pagamento incompleto',untouched?'Selecione uma forma ou clique em "Dividir pagamento".':draft.reason);
+  }else{
     finish.disabled=false;
-    finish.innerHTML='<svg class="icon"><use href="#ico-check"/></svg> Confirmar pagamento';
-    setMessage('pending',chosenMethod==='Dinheiro'?'Troco calculado!':'Aguardando confirmação',chosenMethod==='Dinheiro'?'Confira o troco e registre a venda.':'Confirme o recebimento na maquininha ou no aplicativo antes de registrar.');
+    const sub=splitMode?'Confira todos os pagamentos recebidos antes de confirmar.':chosenMethod==='Dinheiro'?'Confira o troco e registre a venda.':'Confirme o recebimento na maquininha ou no aplicativo antes de registrar.';
+    setMessage('pending',splitMode?'Pagamento dividido pronto!':chosenMethod==='Dinheiro'?'Troco calculado!':'Aguardando confirmação',sub);
   }
 }
 function addProduct(id){
@@ -734,22 +829,22 @@ function adjustProduct(id,delta){
   renderOrder();
 }
 function newSale(){
-  cart={};chosenMethod=null;completedSale=null;$('cashInput').value='';
+  cart={};chosenMethod=null;splitMode=false;completedSale=null;$('cashInput').value='';
+  ['splitDebit','splitCredit','splitPix','splitCash','splitReceived'].forEach(id=>$(id).value='');
   renderProducts();renderOrder();
 }
 function finalize(){
   if(completedSale){newSale();return;}
   const total=currentTotal();
-  if(!total||!chosenMethod)return;
-  const received=chosenMethod==='Dinheiro'?parseMoney($('cashInput').value):null;
-  if(chosenMethod==='Dinheiro'&&(received===null||received<total)){
-    toast('Informe o dinheiro recebido para calcular o troco.',true);return;
-  }
+  const payment=paymentDraft();
+  if(!total||!payment.valid){toast(payment.reason||'Confira o pagamento.',true);return;}
   const items=Object.entries(cart).map(([id,quantity])=>{
     const product=db.products.find(p=>p.id===id);
     return product&&{id:product.id,name:product.name,price:product.price,quantity,subtotal:product.price*quantity};
   }).filter(Boolean);
-  const sale={id:uid(),number:db.sales.length+1,date:new Date().toISOString(),items,total,method:chosenMethod,received,change:received===null?null:received-total};
+  const sale={id:uid(),number:db.sales.length+1,date:new Date().toISOString(),items,total,
+    method:payment.payments.length>1?'Misto':payment.payments[0].method,
+    payments:payment.payments,received:payment.received,change:payment.change};
   if(!storeData({...db,sales:[...db.sales,sale]}))return;
   completedSale=sale;
   renderProducts();renderOrder();
@@ -780,7 +875,7 @@ function renderHistory(){
   let gross=0, refunds=0, extraOutflows=0;
   for(const sale of sales){
     gross+=sale.total;
-    methodBalances[sale.method]+=sale.total;
+    for(const part of salePayments(sale))methodBalances[part.method]+=part.amount;
     for(const item of sale.items)itemTotals.set(item.name,(itemTotals.get(item.name)||0)+item.quantity);
   }
   for(const movement of movements){
@@ -811,12 +906,12 @@ function renderHistory(){
     const anyReturnable=s.items.some((_,i)=>returnableQuantity(s,i)>0);
     return `<details class="sale-entry"><summary>
       <div class="sale-main"><strong>Venda #${String(s.number||0).padStart(4,'0')} · ${escapeHTML(fullDate(s.date))}</strong><span title="${escapeHTML(products)}">${escapeHTML(products)}${totalReturned?' · COM DEVOLUÇÃO':''}</span></div>
-      <div class="sale-end"><strong>${money(s.total)}</strong><span class="sale-method">${escapeHTML(s.method)}</span></div>
+      <div class="sale-end"><strong>${money(s.total)}</strong><span class="sale-method">${escapeHTML(salePaymentLabel(s))}</span></div>
     </summary><div class="sale-detail">
       ${s.items.map((i,index)=>{const r=i.quantity-returnableQuantity(s,index);return `<div><span>${i.quantity} × ${escapeHTML(i.name)} (${money(i.price)}) ${r?`<small class="sale-refund">· ${r} devolvido(s)</small>`:''}</span><strong>${money(i.subtotal)}</strong></div>`;}).join('')}
-      <div><strong>Pago na venda (${escapeHTML(s.method)})</strong><strong>${money(s.total)}</strong></div>
+      ${salePayments(s).map(p=>`<div><span>Pago em ${escapeHTML(p.method)}</span><strong>${money(p.amount)}</strong></div>`).join('')}
       ${totalReturned?`<div class="sale-refund"><span>Devoluções totais</span><strong>− ${money(totalReturned)}</strong></div><div><strong>Valor da venda após devoluções</strong><strong>${money(s.total-totalReturned)}</strong></div>`:''}
-      ${s.method==='Dinheiro'?`<div><span>Dinheiro recebido</span><strong>${money(s.received)}</strong></div><div><span>Troco entregue</span><strong>${money(s.change)}</strong></div>`:''}
+      ${salePayments(s).some(p=>p.method==='Dinheiro')?`<div><span>Dinheiro entregue</span><strong>${money(s.received)}</strong></div><div><span>Troco entregue</span><strong>${money(s.change)}</strong></div>`:''}
       ${returned.map(m=>`<div class="sale-refund"><span>↩ ${m.quantity}x ${escapeHTML(m.itemName)}: devolvido via ${escapeHTML(m.method)}</span><strong>− ${money(m.amount)}</strong></div>`).join('')}
       <div class="sale-actions">${anyReturnable?`<button type="button" class="btn btn-secondary btn-small" data-refund-sale="${escapeHTML(s.id)}">↩ Devolver produto</button>`:''}<button type="button" class="btn btn-secondary btn-small" data-print-sale="${escapeHTML(s.id)}" aria-label="Imprimir comprovante da venda ${escapeHTML(s.number)}"><svg class="icon" aria-hidden="true"><use href="#ico-printer"/></svg> Imprimir comprovante</button></div>
     </div></details>`;
@@ -833,7 +928,7 @@ function openRefund(saleId){
   refundSaleId=saleId;
   const eligible=sale.items.map((item,index)=>({item,index,remaining:returnableQuantity(sale,index)})).filter(x=>x.remaining>0);
   if(!eligible.length){toast('Todos os itens já foram devolvidos.',true);return;}
-  $('refundSaleDescription').textContent=`Venda #${sale.number} paga em ${sale.method}.`;
+  $('refundSaleDescription').textContent=`Venda #${sale.number} · ${salePaymentDetails(sale)}.`;
   $('refundItem').innerHTML=eligible.map(({item,index,remaining})=>`<option value="${index}">${escapeHTML(item.name)} (${money(item.price)} por unidade, até ${remaining})</option>`).join('');
   $('refundQuantity').value='1';
   $('refundMethod').value='Dinheiro';
@@ -903,7 +998,7 @@ function exportCSV(){
   const rows=[['Tipo de registro','Venda','Data/hora','Forma','Produto / descrição','Quantidade','Preço unitário','Valor da linha','Total da venda / saída','Motivo','Situação']];
   for(const sale of filteredSales()){
     for(const item of sale.items){
-      rows.push(['Venda',sale.number,fullDate(sale.date),sale.method,item.name,item.quantity,(item.price/100).toFixed(2).replace('.',','),(item.subtotal/100).toFixed(2).replace('.',','),(sale.total/100).toFixed(2).replace('.',','),'','Registrada']);
+      rows.push(['Venda',sale.number,fullDate(sale.date),salePaymentDetails(sale),item.name,item.quantity,(item.price/100).toFixed(2).replace('.',','),(item.subtotal/100).toFixed(2).replace('.',','),(sale.total/100).toFixed(2).replace('.',','),'','Registrada']);
     }
   }
   for(const m of filteredMovements(true)){
@@ -917,7 +1012,24 @@ function validProduct(p){
   return p&&typeof p.id==='string'&&p.id.length<100&&typeof p.name==='string'&&p.name.length>0&&p.name.length<100&&Number.isSafeInteger(p.price)&&p.price>=0&&p.price<=1000000000&&['Salgados','Bebidas','Doces','Diversos'].includes(p.category)&&(p.image===undefined || typeof p.image==='string');
 }
 function validSale(s){
-  return s&&typeof s.id==='string'&&Number.isFinite(Date.parse(s.date))&&METHODS.includes(s.method)&&Number.isSafeInteger(s.total)&&s.total>=0&&Array.isArray(s.items)&&s.items.length>0&&s.items.every(i=>i&&typeof i.name==='string'&&i.name.length<150&&Number.isSafeInteger(i.quantity)&&i.quantity>0&&Number.isSafeInteger(i.price)&&i.price>=0&&i.subtotal===i.price*i.quantity)&&s.items.reduce((t,i)=>t+i.subtotal,0)===s.total&&(!('received' in s)||s.received===null||Number.isSafeInteger(s.received))&&(!('change' in s)||s.change===null||Number.isSafeInteger(s.change));
+  if(!s||typeof s.id!=='string'||!Number.isFinite(Date.parse(s.date))||
+    !Number.isSafeInteger(s.total)||s.total<0||!Array.isArray(s.items)||!s.items.length||
+    !s.items.every(i=>i&&typeof i.name==='string'&&i.name.length<150&&Number.isSafeInteger(i.quantity)&&i.quantity>0&&Number.isSafeInteger(i.price)&&i.price>=0&&i.subtotal===i.price*i.quantity)||
+    s.items.reduce((t,i)=>t+i.subtotal,0)!==s.total||
+    !(!('received' in s)||s.received===null||Number.isSafeInteger(s.received))||
+    !(!('change' in s)||s.change===null||Number.isSafeInteger(s.change)))return false;
+  // Backups antigos (sem lista de partes) continuam funcionando normalmente.
+  if(s.payments===undefined)return METHODS.includes(s.method);
+  if(!Array.isArray(s.payments)||s.payments.length<1||s.payments.length>4||
+    !s.payments.every(p=>p&&METHODS.includes(p.method)&&Number.isSafeInteger(p.amount)&&p.amount>0)||
+    new Set(s.payments.map(p=>p.method)).size!==s.payments.length||
+    s.payments.reduce((sum,p)=>sum+p.amount,0)!==s.total||
+    s.method!==(s.payments.length>1?'Misto':s.payments[0].method))return false;
+  const cash=s.payments.find(p=>p.method==='Dinheiro');
+  if(cash){
+    if(!Number.isSafeInteger(s.received)||s.received<cash.amount||s.change!==s.received-cash.amount)return false;
+  }else if(s.received!==null||s.change!==null)return false;
+  return true;
 }
 function validMovement(m,sales){
   if(!m||typeof m.id!=='string'||!['refund','outflow'].includes(m.kind)||
@@ -969,7 +1081,9 @@ function buildReceipt(s){
   const refunds=saleRefunds(s.id);
   const amountRefunded=refunds.reduce((v,m)=>v+m.amount,0);
   const refundText=refunds.length?`<hr class="receipt-divider"><div class="receipt-subheading">DEVOLUÇÕES</div>${refunds.map(m=>`<div class="receipt-line"><span>${m.quantity}x ${escapeHTML(m.itemName)} (${escapeHTML(m.method)})</span><strong>− ${money(m.amount)}</strong></div>`).join('')}<div class="receipt-line"><strong>Total após devoluções</strong><strong>${money(s.total-amountRefunded)}</strong></div>`:'';
-  return `<div class="receipt-center"><strong>FESTA DA IGREJA</strong><div>COMPROVANTE DE COMPRA</div><div>${escapeHTML(fullDate(s.date))}</div><div>Venda #${s.number}</div></div><hr class="receipt-divider">${items}<hr class="receipt-divider"><div class="receipt-line"><strong>TOTAL</strong><strong>${money(s.total)}</strong></div><div class="receipt-line"><span>Pagamento</span><span>${escapeHTML(s.method)}</span></div>${s.method==='Dinheiro'?`<div class="receipt-line"><span>Recebido</span><span>${money(s.received)}</span></div><div class="receipt-line"><span>Troco</span><span>${money(s.change)}</span></div>`:''}${refundText}<hr class="receipt-divider"><div class="receipt-center">Obrigado pela colaboração! ♥</div>`;
+  const paymentRows=salePayments(s).map(p=>`<div class="receipt-line"><span>${escapeHTML(p.method)}</span><strong>${money(p.amount)}</strong></div>`).join('');
+  const hasCash=salePayments(s).some(p=>p.method==='Dinheiro');
+  return `<div class="receipt-center"><strong>FESTA DA IGREJA</strong><div>COMPROVANTE DE COMPRA</div><div>${escapeHTML(fullDate(s.date))}</div><div>Venda #${s.number}</div></div><hr class="receipt-divider">${items}<hr class="receipt-divider"><div class="receipt-line"><strong>TOTAL</strong><strong>${money(s.total)}</strong></div><div class="receipt-subheading">PAGAMENTO</div>${paymentRows}${hasCash?`<div class="receipt-line"><span>Dinheiro entregue</span><span>${money(s.received)}</span></div><div class="receipt-line"><span>Troco</span><span>${money(s.change)}</span></div>`:''}${refundText}<hr class="receipt-divider"><div class="receipt-center">Obrigado pela colaboração! ♥</div>`;
 }
 // Este relatório SEMPRE usa todas as vendas, independentemente do filtro "Somente hoje".
 // Não cria compras nem altera os dados gravados.
@@ -984,7 +1098,7 @@ function buildGeneralReport(sales){
 
   for(const sale of sales){
     gross+=sale.total;
-    methodTotals[sale.method]+=sale.total;
+    for(const part of salePayments(sale))methodTotals[part.method]+=part.amount;
     for(const item of sale.items){
       const old=products.get(item.name)||{quantity:0,amount:0};
       old.quantity+=item.quantity;
@@ -995,12 +1109,13 @@ function buildGeneralReport(sales){
   }
 
   const movements=activeMovements();
+  const refundsBySale=new Map();
   for(const movement of movements){
     if(movement.kind==='refund'){
       const sale=saleById.get(movement.saleId);
       if(!sale)continue;
-      // A devolução abate a compra original mesmo se foi paga em espécie.
-      methodTotals[sale.method]-=movement.amount;
+      // Acumulamos devoluções para repartir entre métodos da compra original.
+      refundsBySale.set(sale.id,(refundsBySale.get(sale.id)||0)+movement.amount);
       refundedValue+=movement.amount;
       returnedQuantity+=movement.quantity;
       const old=products.get(movement.itemName)||{quantity:0,amount:0};
@@ -1012,6 +1127,20 @@ function buildGeneralReport(sales){
     }
   }
 
+  // Ao devolver uma compra dividida, o desconto é proporcional às formas
+  // originais, com ajuste de centavos para preservar o valor exato.
+  for(const sale of sales){
+    const refund=refundsBySale.get(sale.id)||0;
+    if(!refund||!sale.total)continue;
+    const pieces=salePayments(sale).map(p=>{
+      const precise=refund*p.amount/sale.total;
+      return {method:p.method,amount:Math.floor(precise),fraction:precise-Math.floor(precise)};
+    });
+    let remaining=refund-pieces.reduce((sum,p)=>sum+p.amount,0);
+    const ranked=pieces.slice().sort((a,b)=>b.fraction-a.fraction);
+    for(let i=0;i<remaining;i++)ranked[i].amount++;
+    for(const p of pieces)methodTotals[p.method]-=p.amount;
+  }
   const net=gross-refundedValue-otherOutflowValue;
   const liquidSales=gross-refundedValue;
   const totalExits=refundedValue+otherOutflowValue;
@@ -1021,7 +1150,7 @@ function buildGeneralReport(sales){
   const movementRows=movements.slice().sort((a,b)=>a.date.localeCompare(b.date)).map(m=>{
     const sale=saleById.get(m.saleId);
     const heading=m.kind==='refund'?`Devolução: ${m.quantity}x ${escapeHTML(m.itemName)}${sale?` (#${escapeHTML(sale.number)})`:''}`:`Saída: ${escapeHTML(m.reason)}`;
-    const detail=m.kind==='refund'?`Compra: ${escapeHTML(sale?.method||'—')} · Devolvido em: ${escapeHTML(m.method)}`:`Retirado em: ${escapeHTML(m.method)}`;
+    const detail=m.kind==='refund'?`Compra: ${escapeHTML(sale?salePaymentLabel(sale):'—')} · Devolvido em: ${escapeHTML(m.method)}`:`Retirado em: ${escapeHTML(m.method)}`;
     return `<div class="receipt-line report-exit"><span><strong>${heading}</strong><div class="report-exit-description">${escapeHTML(fullDate(m.date))}</div><div class="report-exit-description">${detail}</div>${m.kind==='refund'?`<div class="report-exit-description">Motivo: ${escapeHTML(m.reason)}</div>`:''}</span><strong>− ${money(m.amount)}</strong></div>`;
   }).join('');
   const productRows=[...products.entries()].filter(([,d])=>d.quantity>0).sort((a,b)=>b[1].quantity-a[1].quantity).map(([name,data])=>`<div class="receipt-line report-product"><span>${data.quantity}x ${escapeHTML(name)}</span><strong>${money(data.amount)}</strong></div>`).join('');
@@ -1031,7 +1160,7 @@ function buildGeneralReport(sales){
     <hr class="receipt-divider">
     <div class="receipt-line report-grand-total"><strong>TOTAL:</strong><strong>${money(net)}</strong></div>
     <div class="receipt-subheading">POR FORMA DE PAGAMENTO</div>
-    <div class="report-exit-description">Valores já descontados dos produtos devolvidos.</div>
+    <div class="report-exit-description">Valores após devoluções. Compras divididas são descontadas proporcionalmente às formas originais.</div>
     ${methodRows}
     ${otherOutflowValue?`<div class="receipt-line"><span>Saídas avulsas:</span><strong>− ${money(otherOutflowValue)}</strong></div>`:''}
     <hr class="receipt-divider">
@@ -1231,6 +1360,13 @@ $('methods').addEventListener('click',event=>{
   chosenMethod=b.dataset.method;updatePayment();
   if(chosenMethod==='Dinheiro')$('cashInput').focus();
 });
+$('splitToggle').addEventListener('click',()=>{
+  if(completedSale)return;
+  splitMode=!splitMode;
+  updatePayment();
+  if(splitMode)$('splitDebit').focus();
+});
+['splitDebit','splitCredit','splitPix','splitCash','splitReceived'].forEach(id=>$(id).addEventListener('input',updatePayment));
 $('cashInput').addEventListener('input',updatePayment);
 $('finishSale').addEventListener('click',finalize);
 $('printReceipt').addEventListener('click',()=>printSaleReceipt(completedSale));
